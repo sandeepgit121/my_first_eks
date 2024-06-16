@@ -170,20 +170,3 @@ resource "aws_eks_node_group" "backend" {
     #aws_subnet.pub_sub2,
   ]
 }
-
-  provisioner "local-exec" {
-    command = "echo ${aws_instance.backend.public_dns} > inventory"
-  }
-
-  provisioner "local-exec" {
-    command = "ansible all -m shell -a 'yum -y install httpd; systemctl restart httpd'"
-  }
-  output "ip" {
-  value = aws_instance.backend.public_ip
-}
-
-output "publicName" {
-  value = aws_instance.backend.public_dns
-}
-
-

@@ -109,30 +109,3 @@ module "eks"{
   vpc_id = aws_vpc.demo-vpc.id
   subnet_ids =  [aws_subnet.demo_subnet-1.id,aws_subnet.demo_subnet-2.id]
 }
- provisioner "remote-exec" {
-    inline = [ "sudo hostnamectl set-hostname cloud.com" ]
-    connection {
-      host        = aws_instance.pit-001a1a.public_dns
-      type        = "ssh"
-      user        = "ec2-user"
-      private_key = file("./eks.pem")
-    }
-  }
-
-  provisioner "local-exec" {
-    command = "echo ${aws_instance.pit-001a1a.public_dns} > inventory"
-  }
-
-  provisioner "local-exec" {
-    command = "ansible all -m shell -a 'yum -y install httpd; systemctl restart httpd'"
-  }
-  output "ip" {
-  value = aws_instance.pit-001a1a.public_ip
-}
-
-output "publicName" {
-  value = aws_instance.pit-001a1a.public_dns
-}
-
-
-
