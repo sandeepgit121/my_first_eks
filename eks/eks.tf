@@ -268,7 +268,7 @@ resource "aws_eks_node_group" "backend" {
   ]
 }
 module "sgs"{
-  source = "./sg_eks"
+  source = "sg_eks"
   vpc_id = aws_vpc.demo-vpc.id
 }
 module "eks"{
