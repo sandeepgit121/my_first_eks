@@ -214,7 +214,6 @@ ingress {
     Name = "allow_tls"
   }
 }
-}
 resource "aws_eks_cluster" "eks" {
   name = "ed-eks-01"
   role_arn = aws_iam_role.master.arn
