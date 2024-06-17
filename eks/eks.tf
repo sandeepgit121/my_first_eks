@@ -184,6 +184,7 @@ resource "aws_security_group" "demo-vpc-sg" {
   name        = "demo-vpc-sg"
  
   vpc_id      = aws_vpc.demo-vpc.id
+}
 
 resource "aws_security_group" "worker_node_sg" {
   name        = "eks-test"
