@@ -244,7 +244,6 @@ resource "aws_eks_node_group" "backend" {
   instance_types = ["t2.small"]
   remote_access {
     ec2_ssh_key = "eks"
-    source_security_group_ids = [var.sg_ids]
   } 
   
   labels =  tomap({env = "dev"})
