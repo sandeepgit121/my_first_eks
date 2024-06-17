@@ -193,6 +193,14 @@ resource "aws_security_group" "demo-vpc-sg" {
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
   }
+ingress {
+
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
 
   egress {
     from_port        = 0
@@ -206,15 +214,6 @@ resource "aws_security_group" "demo-vpc-sg" {
     Name = "allow_tls"
   }
 }
-module "sgs"{
-  source = "./sg_eks"
-  vpc_id = aws_vpc.demo-vpc.id
-}
-module "eks"{
-  source = "./eks"
-  sg_ids = module.sgs.security_group_public
-  vpc_id = aws_vpc.demo-vpc.id
-  subnet_ids =  [aws_subnet.demo_subnet-1.id,aws_subnet.demo_subnet-2.id]
 }
 resource "aws_eks_cluster" "eks" {
   name = "ed-eks-01"
