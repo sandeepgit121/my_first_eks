@@ -229,3 +229,4 @@ resource "aws_eks_node_group" "backend" {
 
   tags = local.tags
 }
+}
