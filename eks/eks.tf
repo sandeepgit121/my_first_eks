@@ -231,7 +231,6 @@ subnet_id      = aws_subnet.demo_subnet-2.id
     #aws_subnet.pub_sub2,
   ]
 
-}
 #################################################################################################################
 
 resource "aws_eks_node_group" "backend" {
