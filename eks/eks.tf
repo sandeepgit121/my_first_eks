@@ -1,4 +1,7 @@
 // Create VPC
+variable "sg_ids" {
+type = string
+}
 resource "aws_vpc" "demo-vpc" {
   cidr_block = var.vpc-cidr
 }
