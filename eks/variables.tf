@@ -32,9 +32,6 @@ variable "subent-2_az" {
     default =  "ap-south-1b"  
 }
 
-variable "subnet_ids" {
-  type = list
-}
 
 
 
