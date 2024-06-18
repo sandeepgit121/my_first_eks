@@ -36,10 +36,7 @@ variable "sg_ids" {
 type = string
 }
 
-variable "subnet1_ids" {
-  type = list
-}
-variable "subnet2_ids" {
+variable "subnet_ids" {
   type = list
 }
 
