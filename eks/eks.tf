@@ -232,7 +232,7 @@ resource "aws_eks_node_group" "backend" {
 }
 
 module "sgs" {
-source = "./eks"
+source = "./sg_eks"
 vpc_id = aws_vpc.demo-vpc.id
 
 }
