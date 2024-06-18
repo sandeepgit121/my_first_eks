@@ -1,3 +1,3 @@
 output "endpoint" {
-  value = aws_eks_cluster.eks.endpoint
+  value = amc-cluster-wg.eks.endpoint
 }
