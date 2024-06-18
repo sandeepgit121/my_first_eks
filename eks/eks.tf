@@ -228,7 +228,6 @@ resource "aws_eks_node_group" "backend" {
   node_role_arn   = aws_iam_role.worker.arn
   
   subnet_ids = [aws_subnet.demo_subnet-1.id,aws_subnet.demo_subnet-2.id]
-Enable auto-assign public = "true"
   capacity_type = "ON_DEMAND"
   disk_size = "20"
   instance_types = ["t2.small"]
