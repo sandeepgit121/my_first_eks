@@ -1,3 +1,3 @@
 output "endpoint" {
-  value = amc-cluster-wg.eks.endpoint
+  value = amonkincloud-cluster.eks.endpoint
 }
