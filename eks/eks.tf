@@ -182,7 +182,7 @@ resource "aws_eks_cluster" "eks" {
   role_arn = aws_iam_role.master.arn
 
   vpc_config {
-    subnet_ids = [aws_subnet.demo_subnet-1.id][aws_subnet.demo_subnet-2.id]
+    subnet_ids = [aws_subnet.demo_subnet-1.id,aws_subnet.demo_subnet-2.id]
   }
   
   depends_on = [
@@ -201,7 +201,7 @@ resource "aws_eks_node_group" "backend" {
   cluster_name    = aws_eks_cluster.eks.name
   node_group_name = "dev"
   node_role_arn   = aws_iam_role.worker.arn
-  subnet_ids = [aws_subnet.demo_subnet-1.id][aws_subnet.demo_subnet-2.id]
+  subnet_ids = [aws_subnet.demo_subnet-1.id,aws_subnet.demo_subnet-2.id]
   capacity_type = "ON_DEMAND"
   disk_size = "20"
   instance_types = ["t2.small"]
@@ -229,4 +229,17 @@ resource "aws_eks_node_group" "backend" {
     #aws_subnet.pub_sub1,
     #aws_subnet.pub_sub2,
   ]
+}
+
+module "sgs" {
+source = "./eks"
+vpc_id = aws_vpc.demo-vpc.id
+
+}
+module "eks" {
+source "./eks"
+sg_ids=module.sgs.security_group_public
+vpc_id = aws_vpc.demo-vpc.id
+subnet_ids = [aws_subnet.demo_subnet-1.id,aws_subnet.demo_subnet-2.id]
+
 }
