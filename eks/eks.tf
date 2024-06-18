@@ -1,21 +1,25 @@
+// Create VPC
+resource "aws_vpc" "demo-vpc" {
+  cidr_block = var.vpc-cidr
+}
+
 // Create Subnet
 resource "aws_subnet" "demo_subnet-1" {
   vpc_id     = aws_vpc.demo-vpc.id 
-  cidr_block = var.subnet-1-cidr
+  cidr_block = var.subnet1-cidr
   availability_zone = var.subent-1_az
 
   tags = {
-    Name = "demo_subnet-1"
+    Name = "demo_subnet"
   }
 }
-// Create Subnet
 resource "aws_subnet" "demo_subnet-2" {
   vpc_id     = aws_vpc.demo-vpc.id 
-  cidr_block = var.subnet-2-cidr
+  cidr_block = var.subnet2-cidr
   availability_zone = var.subent-2_az
 
   tags = {
-    Name = "demo_subnet-2"
+    Name = "demo_subnet"
   }
 }
 
@@ -47,12 +51,12 @@ resource "aws_route_table_association" "demo-rt_association-1" {
 
   route_table_id = aws_route_table.demo-rt.id
 }
-
 resource "aws_route_table_association" "demo-rt_association-2" {
   subnet_id      = aws_subnet.demo_subnet-2.id 
 
   route_table_id = aws_route_table.demo-rt.id
 }
+
 // create a security group 
 
 resource "aws_security_group" "demo-vpc-sg" {
@@ -64,6 +68,14 @@ resource "aws_security_group" "demo-vpc-sg" {
 
     from_port        = 22
     to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"]
+    ipv6_cidr_blocks = ["::/0"]
+  }
+  ingress {
+
+    from_port        = 80
+    to_port          = 80
     protocol         = "tcp"
     cidr_blocks      = ["0.0.0.0/0"]
     ipv6_cidr_blocks = ["::/0"]
@@ -81,6 +93,8 @@ resource "aws_security_group" "demo-vpc-sg" {
     Name = "allow_tls"
   }
 }
+
+
 resource "aws_iam_role" "master" {
   name = "ed-eks-master"
 
@@ -94,22 +108,65 @@ resource "aws_iam_role" "master" {
         "Service": "eks.amazonaws.com"
       },
       "Action": "sts:AssumeRole"
-=======
-  cluster_name                   = local.name
-  cluster_endpoint_public_access = true
+    }
+  ]
+}
+POLICY
+}
 
-  cluster_addons = {
-    coredns = {
-      most_recent = true
->>>>>>> 152d0a36cb419c2929add03a3c93b1fee92d5e72
+resource "aws_iam_role_policy_attachment" "AmazonEKSClusterPolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSClusterPolicy"
+  role       = aws_iam_role.master.name
+}
+
+resource "aws_iam_role_policy_attachment" "AmazonEKSServicePolicy" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSServicePolicy"
+  role       = aws_iam_role.master.name
+}
+
+resource "aws_iam_role_policy_attachment" "AmazonEKSVPCResourceController" {
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKSVPCResourceController"
+  role       = aws_iam_role.master.name
+}
+
+resource "aws_iam_role" "worker" {
+  name = "ed-eks-worker"
+
+  assume_role_policy = <<POLICY
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Action": "sts:AssumeRole"
     }
-    kube-proxy = {
-      most_recent = true
+  ]
+}
+POLICY
+}
+
+resource "aws_iam_policy" "autoscaler" {
+  name   = "ed-eks-autoscaler-policy"
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": [
+        "autoscaling:DescribeAutoScalingGroups",
+        "autoscaling:DescribeAutoScalingInstances",
+        "autoscaling:DescribeTags",
+        "autoscaling:DescribeLaunchConfigurations",
+        "autoscaling:SetDesiredCapacity",
+        "autoscaling:TerminateInstanceInAutoScalingGroup",
+        "ec2:DescribeLaunchTemplateVersions"
+      ],
+      "Effect": "Allow",
+      "Resource": "*"
     }
-    vpc-cni = {
-      most_recent = true
-    }
-<<<<<<< HEAD
   ]
 }
 EOF
@@ -186,7 +243,7 @@ resource "aws_eks_node_group" "backend" {
   disk_size = "20"
   instance_types = ["t2.small"]
   remote_access {
-    ec2_ssh_key = "rtp-03"
+    ec2_ssh_key = "eks"
     source_security_group_ids = [var.sg_ids]
   } 
   
@@ -196,37 +253,17 @@ resource "aws_eks_node_group" "backend" {
     desired_size = 2
     max_size     = 3
     min_size     = 1
-=======
->>>>>>> 152d0a36cb419c2929add03a3c93b1fee92d5e72
   }
 
-  vpc_id                   = module.vpc.vpc_id
-  subnet_ids               = module.vpc.private_subnets
-  control_plane_subnet_ids = module.vpc.intra_subnets
-
-  # EKS Managed Node Group(s)
-  eks_managed_node_group_defaults = {
-    ami_type       = "AL2_x86_64"
-    instance_types = ["m5.large"]
-
-    attach_cluster_primary_security_group = true
+  update_config {
+    max_unavailable = 1
   }
 
-  eks_managed_node_groups = {
-    amc-cluster-wg = {
-      min_size     = 1
-      max_size     = 2
-      desired_size = 1
-
-      instance_types = ["t3.large"]
-      capacity_type  = "SPOT"
-
-      tags = {
-        ExtraTag = "helloworld"
-      }
-    }
-  }
-
-  tags = local.tags
-}
+  depends_on = [
+    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
+    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
+    aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
+    #aws_subnet.pub_sub1,
+    #aws_subnet.pub_sub2,
+  ]
 }
