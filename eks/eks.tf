@@ -1,8 +1,3 @@
-module "eks" {
-  source  = "terraform-aws-modules/eks/aws"
-  version = "20.14.0"
-
-<<<<<<< HEAD
 // Create Subnet
 resource "aws_subnet" "demo_subnet-1" {
   vpc_id     = aws_vpc.demo-vpc.id 
