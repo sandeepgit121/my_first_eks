@@ -51,11 +51,6 @@ resource "aws_route_table_association" "demo-rt_association-1" {
 
   route_table_id = aws_route_table.demo-rt.id
 }
-resource "aws_route_table_association" "demo-rt_association-2" {
-  
-
-  route_table_id = aws_route_table.demo-rt.id
-}
 
 // create a security group 
 
@@ -217,9 +212,11 @@ resource "aws_iam_instance_profile" "worker" {
 resource "aws_eks_cluster" "eks" {
   name = "ed-eks-01"
   role_arn = aws_iam_role.master.arn
-
-  vpc_id = aws_vpc.demo-vpc.id
-subnet_id      = [aws_subnet.demo_subnet-1.id][aws_subnet.demo_subnet-2.id]
+vpc_config {
+vpc_id = aws_vpc.demo-vpc.id
+    subnet_ids = [aws_subnet.demo_subnet-1.id][aws_subnet.demo_subnet-2.id]
+  }
+  
   }
   
  
