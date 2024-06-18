@@ -1,36 +1,24 @@
-variable "location" {
-    default = "ap-south-1"
-}
+module "vpc" {
+  source  = "terraform-aws-modules/vpc/aws"
+  version = "~> 4.0"
 
-variable "os_name" {
-    default = "ami-09ba48996007c8b50"
-}
+  name = local.name
+  cidr = local.vpc_cidr
 
-variable "key" {
-    default = "eks"
-}
+  azs             = local.azs
+  private_subnets = local.private_subnets
+  public_subnets  = local.public_subnets
+  intra_subnets   = local.intra_subnets
 
-variable "instance-type" {
-    default = "t2.small"
-}
+  enable_nat_gateway = true
 
-variable "vpc-cidr" {
-    default = "10.10.0.0/16"  
-}
+  public_subnet_tags = {
+    "kubernetes.io/role/elb" = 1
+  }
 
-variable "subnet-1-cidr" {
-    default = "10.10.1.0/24"
-  
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb" = 1
+  }
 }
-variable "subnet-2-cidr" {
-    default = "10.10.2.0/24"
-}
-variable "subent-1_az" {
-    default =  "ap-south-1a"  
-}
-variable "subent-2_az" {
-    default =  "ap-south-1b"  
-}
-
 
 
