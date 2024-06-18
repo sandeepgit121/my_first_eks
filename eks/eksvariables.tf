@@ -7,7 +7,7 @@ variable "os_name" {
 }
 
 variable "key" {
-    default = "key"
+    default = "eks"
 }
 
 variable "instance-type" {
