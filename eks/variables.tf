@@ -33,5 +33,9 @@ variable "subent-2_az" {
 }
 
 
+variable "vpc_id" {
+  
+   type = string
+}
 
 
