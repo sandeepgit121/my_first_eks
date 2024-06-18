@@ -252,21 +252,5 @@ resource "aws_eks_node_group" "backend" {
   }
 }
 
-  depends_on = [
-    aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
-    aws_iam_role_policy_attachment.AmazonEKS_CNI_Policy,
-    aws_iam_role_policy_attachment.AmazonEC2ContainerRegistryReadOnly,
-    #aws_subnet.pub_sub1,
-    #aws_subnet.pub_sub2,
-  ]
- depends_on = [
-    aws_iam_role_policy_attachment.AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.AmazonEKSServicePolicy,
-    aws_iam_role_policy_attachment.AmazonEKSVPCResourceController,
-    aws_iam_role_policy_attachment.AmazonEKSVPCResourceController,
-    #aws_subnet.pub_sub1,
-    #aws_subnet.pub_sub2,
-  ]
-
 
 
