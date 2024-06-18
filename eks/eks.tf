@@ -1,3 +1,16 @@
+variable "sg_ids" {
+type = string
+}
+
+variable "subnet_ids" {
+  type = list
+}
+
+variable "vpc_id" {
+   //default = "vpc-5f680722"
+   type = string
+}
+
 // Create VPC
 resource "aws_vpc" "demo-vpc" {
   cidr_block = var.vpc-cidr
