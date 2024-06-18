@@ -222,14 +222,7 @@ resource "aws_eks_cluster" "eks" {
 subnet_id      = aws_subnet.demo_subnet-2.id
   }
   
-  depends_on = [
-    aws_iam_role_policy_attachment.AmazonEKSClusterPolicy,
-    aws_iam_role_policy_attachment.AmazonEKSServicePolicy,
-    aws_iam_role_policy_attachment.AmazonEKSVPCResourceController,
-    aws_iam_role_policy_attachment.AmazonEKSVPCResourceController,
-    #aws_subnet.pub_sub1,
-    #aws_subnet.pub_sub2,
-  ]
+ 
 
 #################################################################################################################
 
@@ -257,6 +250,7 @@ resource "aws_eks_node_group" "backend" {
   update_config {
     max_unavailable = 1
   }
+}
 
   depends_on = [
     aws_iam_role_policy_attachment.AmazonEKSWorkerNodePolicy,
@@ -265,6 +259,14 @@ resource "aws_eks_node_group" "backend" {
     #aws_subnet.pub_sub1,
     #aws_subnet.pub_sub2,
   ]
-}
+ depends_on = [
+    aws_iam_role_policy_attachment.AmazonEKSClusterPolicy,
+    aws_iam_role_policy_attachment.AmazonEKSServicePolicy,
+    aws_iam_role_policy_attachment.AmazonEKSVPCResourceController,
+    aws_iam_role_policy_attachment.AmazonEKSVPCResourceController,
+    #aws_subnet.pub_sub1,
+    #aws_subnet.pub_sub2,
+  ]
+
 
 
