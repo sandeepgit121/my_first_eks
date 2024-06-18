@@ -226,6 +226,7 @@ resource "aws_eks_node_group" "backend" {
   cluster_name    = aws_eks_cluster.eks.name
   node_group_name = "dev"
   node_role_arn   = aws_iam_role.worker.arn
+ associate_public_ip_address = true
   subnet_ids = [aws_subnet.demo_subnet-1.id,aws_subnet.demo_subnet-2.id]
   capacity_type = "ON_DEMAND"
   disk_size = "20"
