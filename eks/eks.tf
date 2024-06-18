@@ -5,7 +5,7 @@ resource "aws_vpc" "demo-vpc" {
 
 // Create Subnet
 resource "aws_subnet" "demo_subnet-1" {
-  vpc_id     = aws_vpc.demo-vpc.id 
+  vpc_id     = var.vpc_id 
   cidr_block = var.subnet-cidr
   availability_zone = var.subent_az
 
@@ -14,7 +14,7 @@ resource "aws_subnet" "demo_subnet-1" {
   }
 }
 resource "aws_subnet" "demo_subnet-2" {
-  vpc_id     = aws_vpc.demo-vpc.id 
+  vpc_id     = var.vpc_id
   cidr_block = var.subnet-cidr
   availability_zone = var.subent_az
 
@@ -26,7 +26,7 @@ resource "aws_subnet" "demo_subnet-2" {
 // Create Internet Gateway
 
 resource "aws_internet_gateway" "demo-igw" {
-  vpc_id = aws_vpc.demo-vpc.id
+  vpc_id = var.vpc_id
 
   tags = {
     Name = "demo-igw"
@@ -34,7 +34,7 @@ resource "aws_internet_gateway" "demo-igw" {
 }
 
 resource "aws_route_table" "demo-rt" {
-  vpc_id = aws_vpc.demo-vpc.id
+  vpc_id = var.vpc_id
 
   route {
     cidr_block = "0.0.0.0/0"
