@@ -60,7 +60,7 @@ resource "aws_route_table_association" "demo-rt_association-2" {
 resource "aws_security_group" "worker_node_sg" {
   name        = "eks-test"
   description = "Allow ssh inbound traffic"
-  vpc_id      =  var.vpc_id
+  vpc_id      =  aws_vpc.demo-vpc.id
 
   ingress {
     description      = "ssh access to public"
