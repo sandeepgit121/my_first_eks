@@ -7,6 +7,7 @@ resource "aws_vpc" "demo-vpc" {
 resource "aws_subnet" "demo_subnet-1" {
   vpc_id     = aws_vpc.demo-vpc.id
   cidr_block = var.subnet1-cidr
+map_public_ip_on_launch = true
   availability_zone = var.subent1_az
 
   tags = {
@@ -16,6 +17,7 @@ resource "aws_subnet" "demo_subnet-1" {
 resource "aws_subnet" "demo_subnet-2" {
   vpc_id     = aws_vpc.demo-vpc.id
   cidr_block = var.subnet2-cidr
+map_public_ip_on_launch = true
   availability_zone = var.subent2_az
 
   tags = {
